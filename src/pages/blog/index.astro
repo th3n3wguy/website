@@ -1,0 +1,37 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts } from '../../lib/site';
+const posts = await getPosts();
+const tags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
+---
+<Layout title="Blog" description="Articles by Shane Tarleton on software development, JavaScript, and engineering practices.">
+  <header class="page-heading"><p class="eyebrow">Notes from the work</p><h1>Writing.</h1><p class="intro">Ideas, lessons, and practical explanations for people who build software.</p></header>
+  <form class="filters" role="search">
+    <div><label for="search">Find an article</label><input id="search" type="search" placeholder="Search titles, topics, and summaries" /></div>
+    <div><label for="topic">Topic</label><select id="topic"><option value="">All topics</option>{tags.map(tag => <option value={tag}>{tag}</option>)}</select></div>
+  </form>
+  <p id="results" class="muted" aria-live="polite">{posts.length} articles</p>
+  <PostList posts={posts} />
+  <p id="no-results" hidden>No articles match. Try another search or topic.</p>
+  <script>
+    const search = document.querySelector<HTMLInputElement>('#search')!;
+    const topic = document.querySelector<HTMLSelectElement>('#topic')!;
+    const posts = document.querySelectorAll<HTMLElement>('[data-post]');
+    function filter() {
+      let count = 0;
+      posts.forEach(post => {
+        const tags: string[] = JSON.parse(post.dataset.tags || '[]');
+        const matches = (post.dataset.search || '').includes(search.value.trim().toLowerCase())
+          && (!topic.value || tags.includes(topic.value));
+        post.hidden = !matches;
+        if (matches) count++;
+      });
+      document.querySelector('#results')!.textContent = `${count} ${count === 1 ? 'article' : 'articles'}`;
+      document.querySelector<HTMLElement>('#no-results')!.hidden = count !== 0;
+    }
+    search.addEventListener('input', filter);
+    topic.addEventListener('change', filter);
+    document.querySelector('form')?.addEventListener('submit', event => event.preventDefault());
+  </script>
+</Layout>

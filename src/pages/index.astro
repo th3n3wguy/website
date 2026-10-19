@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PostList from '../components/PostList.astro';
+import { getPosts, path } from '../lib/site';
+const posts = await getPosts();
+---
+<Layout>
+  <section class="hero">
+    <p class="eyebrow">Shane Tarleton / Software Engineer</p>
+    <h1>Good software.<br />Thoughtfully built.</h1>
+    <p class="intro">I build software across industries, from user interfaces to the infrastructure that gets them into people's hands.</p>
+    <p class="hero-note">This is where I share what I've learned along the way.</p>
+    <div class="hero-links"><a class="button" href={path('blog/')}>Read the blog <span aria-hidden="true">&rarr;</span></a><a href={path('about/')}>A little about me</a></div>
+  </section>
+  <section class="section">
+    <div class="section-heading"><h2>Latest writing</h2><a href={path('blog/')}>All articles <span aria-hidden="true">&rarr;</span></a></div>
+    <PostList posts={posts.slice(0, 3)} />
+  </section>
+  <section class="section closing">
+    <p class="eyebrow">Selected work</p>
+    <h2>From ideas to things people use.</h2>
+    <p>A named inventor on a US patent for hierarchical data display, and the sole developer of Cirrus Solutions' Subcontractor Portal.</p>
+    <a href={path('projects/')}>Explore the projects <span aria-hidden="true">&rarr;</span></a>
+  </section>
+</Layout>

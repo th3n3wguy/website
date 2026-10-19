@@ -1,0 +1,24 @@
+---
+import { render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { formatDate, getPosts, path } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return (await getPosts()).map(post => ({ params: { id: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+<Layout title={post.data.title} description={post.data.description} article>
+  <article class="article">
+    <header class="page-heading">
+      <a class="back-link" href={path('blog/')}>&larr; All articles</a>
+      <p class="eyebrow"><time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time> / Shane Tarleton</p>
+      <h1>{post.data.title}</h1>
+      <p class="intro">{post.data.description}</p>
+      <ul class="tags" aria-label="Topics">{post.data.tags.map(tag => <li>{tag}</li>)}</ul>
+    </header>
+    <div class="prose"><Content /></div>
+    {post.data.sourceUrl && <aside class="source-note">Originally published on <a href={post.data.sourceUrl}>Medium</a> on {formatDate(post.data.pubDate)}. Preserved here as part of my writing archive.</aside>}
+  </article>
+</Layout>
