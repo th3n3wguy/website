@@ -78,6 +78,28 @@ test('published articles include the migrated archive and appear in RSS and site
   assert.ok(!read('about/index.html').includes('tarleton.shane@gmail.com'));
 });
 
+test('all external web links open a new tab while internal links stay in the current tab', () => {
+  let externalCount = 0;
+  for (const file of allFiles(root).filter(file => file.endsWith('.html'))) {
+    const $ = load(readFileSync(file, 'utf8'));
+    $('a[href]').each((_, element) => {
+      const link = $(element);
+      const destination = new URL(link.attr('href'), origin);
+      if (!['http:', 'https:'].includes(destination.protocol)) return;
+      if (destination.origin === new URL(origin).origin) {
+        assert.notEqual(link.attr('target'), '_blank', `${file}: internal link ${destination}`);
+        return;
+      }
+      externalCount++;
+      assert.equal(link.attr('target'), '_blank', `${file}: external link ${destination}`);
+      const rel = (link.attr('rel') || '').split(/\s+/);
+      assert.ok(rel.includes('noopener'), `${file}: missing noopener`);
+      assert.ok(rel.includes('noreferrer'), `${file}: missing noreferrer`);
+    });
+  }
+  assert.ok(externalCount > 0);
+});
+
 function themePage(saved, blocked = false) {
   const $ = load(read('index.html'));
   const attributes = {};

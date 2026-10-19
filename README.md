@@ -10,6 +10,10 @@ is saved in browser local storage. If storage is unavailable, the toggle still
 works for the current page. No analytics, account system, or comment service is
 included.
 
+External HTTP/HTTPS links open in a new tab with `noopener noreferrer`; internal
+navigation stays in the current tab. `src/middleware.ts` applies this to generated
+HTML, including Markdown articles, without requiring browser JavaScript.
+
 ## Local development
 
 Use Node.js 22.12 or newer.
