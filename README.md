@@ -86,11 +86,21 @@ Pages actions. No deployment branch or server is needed.
 2. In **Settings > Pages > Build and deployment**, select **GitHub Actions**.
 3. Run the **Deploy to GitHub Pages** workflow, or push to `master`.
 
-The URL is `https://th3n3wguy.github.io/website/`. If the repository's default
+The production URL is `https://shanetarleton.com/`. The workflow sets
+`SITE_URL=https://shanetarleton.com` and `BASE_PATH=/` so links, assets,
+canonical URLs, RSS, and the sitemap use the custom domain's root.
+Local development still defaults to `/website/`. To preview production paths:
+
+```sh
+SITE_URL=https://shanetarleton.com BASE_PATH=/ npm test
+SITE_URL=https://shanetarleton.com BASE_PATH=/ npm run preview
+```
+
+If the repository's default
 branch is renamed, update the workflow's `on.push.branches` setting.
 Repository administrator access is needed for the Pages setting.
 
-## Future custom domain
+## Custom domain configuration
 
 Set `SITE_URL` to the full HTTPS origin (for example `https://example.com`)
 and `BASE_PATH` to `/` in the build environment of the workflow. Set those same
@@ -101,6 +111,12 @@ Add the domain under **Settings > Pages**, configure the DNS records described
 by GitHub, verify domain ownership, and enable HTTPS. Rebuild after changing
 the domain. Do not retain `/website` in the base path when serving at the root
 of a custom domain.
+
+`shanetarleton.com` is configured in the repository's Pages settings. Its apex
+DNS uses GitHub's four A records, and `www` is a CNAME to
+`th3n3wguy.github.io`. GitHub redirects `www` to the primary apex domain.
+Keep the account-level domain-verification TXT record in DNS. With an Actions
+deployment, a repository `CNAME` file is not required.
 
 ## Medium migration
 
