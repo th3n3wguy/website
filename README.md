@@ -14,6 +14,20 @@ External HTTP/HTTPS links open in a new tab with `noopener noreferrer`; internal
 navigation stays in the current tab. `src/middleware.ts` applies this to generated
 HTML, including Markdown articles, without requiring browser JavaScript.
 
+## Contributor and agent workflow
+
+Read [contributor documentation](documentation/README.md) and
+[Copilot instructions](.github/copilot-instructions.md) before making changes.
+The five repository agents cover planning, coding, testing, build/release, and
+documentation. Repeatable procedures live in `.github/skills/`.
+
+Each change has a documentation-owned local plan in ignored `.plans/`. Before
+push, the documentation agent promotes durable information into tracked
+`documentation/` and reports readiness. The planner only coordinates and
+delegates; it does not edit files. See the
+[agent workflow](documentation/agent-workflow.md) for gates and cross-surface
+fallbacks.
+
 ## Local development
 
 Use Node.js 22.12 or newer.

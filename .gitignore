@@ -2,6 +2,7 @@
 node_modules
 /dist
 .astro/
+/.plans/
 
 # local env files
 .env.local
